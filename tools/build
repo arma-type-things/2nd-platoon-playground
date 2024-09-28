@@ -1,15 +1,25 @@
-#!/bin/zsh
+#!/usr/bin/env zsh
 
 # This script assembles the folder structure for the mission file. It will then attempt to detect what PBO tool is available and use that to pack the mission file.
 
 # Global variables
 cwd=$(pwd)
-missionName="2nd-platoon-private-zeus-nam"
-supportedMaps=("Cam_Lao_Nam")
+# eventually will be a list of all the mission setups available for each map available
+missionNames=("2nd-platoon-private-zeus-nam" "dummy")
+supportedMaps=("Cam_Lao_Nam" "example")
 missionFolders=()
 for map in "${supportedMaps[@]}"
 do
-    missionFolders+=("${missionName}.${map}")
+    for missionName in "${missionNames[@]}"
+    do
+        local mapFolder="${missionName}.${map}"
+        # if the source mission folder does not exist, continue the loop, skipping this mission.map combo
+        if [ ! -d "${mapFolder}" ]; then
+            echo "Skipping ${mapFolder} as it does not exist."
+            continue
+        fi
+        missionFolders+=("${mapFolder}")
+    done
 done
 # create temp folder with fallback for macos
 tempFolder=$(mktemp -d 2>/dev/null || mktemp -d -t '1stCavBuildTmp')
@@ -23,16 +33,30 @@ else
     exit 1
 fi
 
-# a function that sets up the temporary folder for packaging up the mission
+# MARK: - Functions
 function setupTempFolder {
-    # Create temporary folder (compatible with linux or macos)
-
     # Create mission folder(s) in temp folder
     for mapFolder in "${missionFolders[@]}"
     do
+        # if the source mission folder does not exist, continue the loop, skipping this mission.map combo
+        if [ ! -d "${mapFolder}" ]; then
+            echo "Skipping ${mapFolder} as it does not exist."
+            continue
+        fi
+        local targetFolder="${tempFolder}/${mapFolder}"
+        # if the target folder exists, remove it
+        if [ -d "${targetFolder}" ]; then
+            rm -rf "${targetFolder}"
+        fi
         cp -r "${mapFolder}" "${tempFolder}/"
-        cp -r "1stCAV" "${tempFolder}/${mapFolder}/"
+        cp -r "1stCAV" "${targetFolder}/"
+        copyParadigm "${targetFolder}/"
     done
+}
+
+function copyParadigm {
+    local missionFolder=$1
+    cp -r "paradigm" "${missionFolder}"
 }
 
 function packMissions {
@@ -40,18 +64,31 @@ function packMissions {
     cd "${tempFolder}"
     for mapFolder in "${missionFolders[@]}"
     do
+        # if the source mission folder does not exist, continue the loop, skipping this mission.map combo
+        if [ ! -d "${mapFolder}" ]; then
+            echo "Skipping ${mapFolder} as it does not exist."
+            continue
+        fi
         echo "Packing ${mapFolder}"
         $pboTool pack "${mapFolder}" "${mapFolder}.pbo"
     done
     cd "${cwd}"
 }
 
+function updateGitSubmodules {
+    # if the .submodules-updated file exists, quietly exit this function and continue the script
+    if [ -f "${cwd}/.submodules-updated" ]; then
+        return
+    fi
+    # Update git submodules
+    git submodule update --init --recursive
+    touch "${cwd}/.submodules-updated"
+}
+
 function moveArtifacts {
     # Move the artifacts to the build folder
-    for mapFolder in "${missionFolders[@]}"
-    do
-        mv "${tempFolder}/${mapFolder}.pbo" "${cwd}/build/"
-    done
+    cp ${tempFolder}/*.pbo "${cwd}/build/"
+    # mv "${tempFolder}/*.zip" "${cwd}/build/"
 }
 
 function cleanup {
@@ -59,13 +96,18 @@ function cleanup {
     rm -rf "${tempFolder}"
 }
 
-# a main function
+# MARK: - Main function
 function main {
+    updateGitSubmodules
     setupTempFolder
     echo "Temp folder: ${tempFolder}"
     packMissions
     mkdir -p "${cwd}/build"
     moveArtifacts
+    # if DEBUG is set, do not cleanup the temp folder
+    if [ -z "$DEBUG" ]; then
+        cleanup
+    fi
 }
 
 # Run the main function
