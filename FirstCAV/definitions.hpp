@@ -1,6 +1,6 @@
-class 1stCAV {
+class FirstCAV {
     // Load paradrop config
-    // _paradropConfig = missionConfigFile >> "1stCAV" >> "paradrop";
+    // _paradropConfig = missionConfigFile >> "FirstCAV" >> "paradrop";
     class paradrop {
         #include "configs\paradrop.hpp"
     };
