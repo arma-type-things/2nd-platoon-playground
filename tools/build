@@ -1,0 +1,72 @@
+#!/bin/zsh
+
+# This script assembles the folder structure for the mission file. It will then attempt to detect what PBO tool is available and use that to pack the mission file.
+
+# Global variables
+cwd=$(pwd)
+missionName="2nd-platoon-private-zeus-nam"
+supportedMaps=("Cam_Lao_Nam")
+missionFolders=()
+for map in "${supportedMaps[@]}"
+do
+    missionFolders+=("${missionName}.${map}")
+done
+# create temp folder with fallback for macos
+tempFolder=$(mktemp -d 2>/dev/null || mktemp -d -t '1stCavBuildTmp')
+# detect PBO tool and set it to the variable pboTool
+pboTool=""
+if command -v armake2 &> /dev/null
+then
+    pboTool="armake2"
+else
+    echo "No PBO tool found. Please install armake2."
+    exit 1
+fi
+
+# a function that sets up the temporary folder for packaging up the mission
+function setupTempFolder {
+    # Create temporary folder (compatible with linux or macos)
+
+    # Create mission folder(s) in temp folder
+    for mapFolder in "${missionFolders[@]}"
+    do
+        cp -r "${mapFolder}" "${tempFolder}/"
+        cp -r "1stCAV" "${tempFolder}/${mapFolder}/"
+    done
+}
+
+function packMissions {
+    # Pack the mission(s)
+    cd "${tempFolder}"
+    for mapFolder in "${missionFolders[@]}"
+    do
+        echo "Packing ${mapFolder}"
+        $pboTool pack "${mapFolder}" "${mapFolder}.pbo"
+    done
+    cd "${cwd}"
+}
+
+function moveArtifacts {
+    # Move the artifacts to the build folder
+    for mapFolder in "${missionFolders[@]}"
+    do
+        mv "${tempFolder}/${mapFolder}.pbo" "${cwd}/build/"
+    done
+}
+
+function cleanup {
+    # Cleanup
+    rm -rf "${tempFolder}"
+}
+
+# a main function
+function main {
+    setupTempFolder
+    echo "Temp folder: ${tempFolder}"
+    packMissions
+    mkdir -p "${cwd}/build"
+    moveArtifacts
+}
+
+# Run the main function
+main
