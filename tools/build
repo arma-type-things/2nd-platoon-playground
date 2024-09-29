@@ -58,6 +58,7 @@ function setupTempFolder {
 function copyParadigm {
     local missionFolder=$1
     cp -r "paradigm" "${missionFolder}"
+    cp para_*.sqf "${missionFolder}"
 }
 
 function packMissions {

@@ -1,17 +1,17 @@
-// private _baseConfig = missionConfigFile >> "1stCAV" >> "paradrop" >> "pickups";
+// private _baseConfig = missionConfigFile >> "FirstCAV" >> "paradrop" >> "pickups";
 
 [] spawn {
     private [ "_dialog", "_backpack", "_backpackcontents" ];
     markers_reset = getMarkerPos "paradrop_marker";
     drop_altitude = 800;
 
-    _dialog = createDialog "1stCAV_sog_paradrop";
+    _dialog = createDialog "FirstCAV_sog_paradrop";
     dojump = 0;
     jumper_position = getpos player;
 
     _backpackcontents = [];
 
-    [ "1stCAV_paradrop_event", "onMapSingleClick", { jumper_position = _pos } ] call BIS_fnc_addStackedEventHandler;
+    [ "FirstCAV_paradrop_event", "onMapSingleClick", { jumper_position = _pos } ] call BIS_fnc_addStackedEventHandler;
 
     "paradrop_marker" setMarkerTextLocal "Drop Here";
 
@@ -30,7 +30,7 @@
     "paradrop_marker" setMarkerPosLocal markers_reset;
     "paradrop_marker" setMarkerTextLocal "";
 
-    [ "1stCAV_paradrop_event", "onMapSingleClick" ] call BIS_fnc_removeStackedEventHandler;
+    [ "1FirstCAV_paradrop_event", "onMapSingleClick" ] call BIS_fnc_removeStackedEventHandler;
 
     if ( dojump > 0 ) then {
         jumper_position = jumper_position getPos [random 250, random 360];

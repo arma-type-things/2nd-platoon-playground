@@ -495,7 +495,7 @@ class BgPicture {
     font = "tt2020base_vn_bold";
     sizeEx = 0.023;
     moving = false;
-    text = "1stCAV\res\camo03.jpg";
+    text = "FirstCAV\res\camo03.jpg";
 };
 class StdCombo {
     idc = -1;
@@ -554,7 +554,7 @@ class StdEdit {
     shadow = 0;
 };
 
-class 1stCAV_sog_paradrop {
+class FirstCAV_sog_paradrop {
     idd = 5203;
     movingEnable = false;
     controlsBackground[] = {};

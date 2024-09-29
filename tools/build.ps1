@@ -45,6 +45,7 @@ function Copy-Paradigm {
         [string]$missionFolder
     )
     Copy-Item -Recurse -Path "paradigm" -Destination $missionFolder
+    Copy-Item -Path "para_*.sqf" -Destination $missionFolder
 }
 
 # Main function

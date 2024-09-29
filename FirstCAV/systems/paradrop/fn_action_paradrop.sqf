@@ -15,10 +15,10 @@
 	Returns: nothing
 	
 	Example(s):
-		call 1stCAV_fnc_action_paradrop
+		call FirstCAV_fnc_action_paradrop
 */
 
-private _baseConfig = missionConfigFile >> "1stCAV" >> "paradrop";
+private _baseConfig = missionConfigFile >> "FirstCAV" >> "paradrop";
 
 {
 	private _pickupConfig = _x;
@@ -31,7 +31,7 @@ private _baseConfig = missionConfigFile >> "1stCAV" >> "paradrop";
             _object,
             createHashMapFromArray [
                 ["iconPath", _image],
-                ["function", "1stCAV_fnc_paradrop"],
+                ["function", "FirstCAV_fnc_paradrop"],
                 ["text", "Paradrop"]
             ]
         ] call para_c_fnc_wheel_menu_add_obj_action;
