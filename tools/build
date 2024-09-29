@@ -50,6 +50,7 @@ function setupTempFolder {
         fi
         cp -r "${mapFolder}" "${tempFolder}/"
         cp -r "FirstCAV" "${targetFolder}/"
+        cp -r "config" "${targetFolder}/"
         copyParadigm "${targetFolder}/"
     done
 }
