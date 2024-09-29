@@ -1,2 +1,3 @@
-#include "FirstCAV\definitions.hpp"
+use_paradigm_init = 1;
 #include "config\core.hpp"
+#include "FirstCAV\definitions.hpp"
