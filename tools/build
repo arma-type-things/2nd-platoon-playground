@@ -4,10 +4,18 @@
 
 # Global variables
 cwd=$(pwd)
-# eventually will be a list of all the mission setups available for each map available
+# Mission folder names, space separated, without the map name (usefule for winter and non-winter maps having the same sqm)
+# e.g. missionNames=("mountain-ops" "desert-ops")
 missionNames=("2nd-platoon-private-zeus-nam" "dummy")
+# Map names, space separated. This will be used to create the full name of the mission file, as well as process repeated mission files on multiple maps
+# e.g. supportedMaps=("chern" "chern_winter" "takistan")
 supportedMaps=("Cam_Lao_Nam" "example")
 missionFolders=()
+# This generates the list of mission files, using missionNames and supportedMaps, combined.
+# e.g. with the above, it will see if mountain-ops.chern, mountain-ops.chern_winter, mountain-ops.takistan, desert-ops.chern, desert-ops.chern_winter, and desert-ops.takistan exist.
+# If so, that mission folder name is added to the "missionFolders" list, which is later used to build the script structures and package up the PBO / ZIP files.
+# This system lets you do something like, have a mountain-ops.takisan mission, along with a mountain-ops.chern and mountain-ops.chern_winter missions, and they will all get packaged up, along side the desert-ops.takistan mission, if it exists.
+# You can use this combined with folder names of missions to flexibly build a number of different combinations. May not be useful to you, but it was useful for this project.
 for map in "${supportedMaps[@]}"
 do
     for missionName in "${missionNames[@]}"
