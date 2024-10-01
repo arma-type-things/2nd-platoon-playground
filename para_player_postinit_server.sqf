@@ -27,3 +27,5 @@
 */
 
 params ["_player", "_didJIP"];
+
+diag_log format ["1st Cav: Player postinit server - %1", _player];

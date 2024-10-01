@@ -2,7 +2,7 @@
 <Project name="FIRSTCAV_ZEUSMODE">
   <Package name="FC">
     <Container name="default">
-      <Key ID="STR_FirstCAV_respawn_att">
+      <Key ID="STR_FirstCAV_respawn_armatypethings">
         <Original>FOB2 KONTUM - ATT Tent</Original>
       </Key>
     </Container>

@@ -3,6 +3,25 @@ class FirstCAV_zeusmode
 	class paradrop {
 		#include "..\FirstCAV\configs\paradrop.hpp"
 	};
+	
+	class playerVars {
+		public[] = {"firstcav_db_player_group","firstcav_db_friends"};
+		hidden[] = {};
+	};
+
+	// firstcav_respawn_att
+	class teams {
+		class ArmaTypeThings
+		{
+			name = "Arma Type Things [ATT]";
+			// TODO: use ATT Logo
+			icon = "\vn\ui_f_vietnam\ui\taskroster\img\logos\Logo_MikeForce_HL.paa";
+			shortname = "ATT";
+			//Function Calls on team Join
+			onJoin = "";
+			onLeave = "";
+		};
+	};
 	// class difficulty
 	// {
 	// 	#include "subconfigs\difficulty.hpp"
@@ -117,4 +136,9 @@ class FirstCAV_zeusmode
 	// };
 
 	// #include "subconfigs\units.hpp"
+};
+
+// so we don't get errors when updating the local vars
+class gamemode {
+	class tracking {};
 };

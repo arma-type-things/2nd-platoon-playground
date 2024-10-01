@@ -16,14 +16,14 @@ class EditorData
 	};
 	class LayerIndexProvider
 	{
-		nextID=614;
+		nextID=618;
 	};
 	class Camera
 	{
-		pos[]={14689.99,161.36665,6882.6436};
-		dir[]={-0.3313126,-0.62794411,0.7042166};
-		up[]={-0.26732263,0.77825648,0.56820291};
-		aside[]={0.90486181,4.4172339e-008,0.42571044};
+		pos[]={14688.81,106.58379,6936.9277};
+		dir[]={-0.38257313,-0.45359632,0.80492556};
+		up[]={-0.19472316,0.89119893,0.40969196};
+		aside[]={0.90318513,9.8254532e-008,0.42927584};
 	};
 };
 binarizationWanted=0;
@@ -255,13 +255,12 @@ class ScenarioData
 {
 	author="Bóng ma";
 	disabledAI=1;
-	respawn=3;
 	respawnDelay=3;
 	class Header
 	{
 		gameType="Zeus";
 		minPlayers=1;
-		maxPlayers=20;
+		maxPlayers=40;
 	};
 };
 class CustomAttributes
@@ -278,34 +277,6 @@ class CustomAttributes
 				class data
 				{
 					singleType="ARRAY";
-					class value
-					{
-						items=3;
-						class Item0
-						{
-							class data
-							{
-								singleType="STRING";
-								value="MenuInventory";
-							};
-						};
-						class Item1
-						{
-							class data
-							{
-								singleType="STRING";
-								value="MenuPosition";
-							};
-						};
-						class Item2
-						{
-							class data
-							{
-								singleType="STRING";
-								value="Counter";
-							};
-						};
-					};
 				};
 			};
 		};
@@ -318,7 +289,7 @@ class CustomAttributes
 				class data
 				{
 					singleType="SCALAR";
-					value=1;
+					value=0;
 				};
 			};
 		};
@@ -336,6 +307,24 @@ class CustomAttributes
 			};
 		};
 		nAttributes=3;
+	};
+	class Category1
+	{
+		name="Scenario";
+		class Attribute0
+		{
+			property="cba_settings_hasSettingsFile";
+			expression="false";
+			class Value
+			{
+				class data
+				{
+					singleType="BOOL";
+					value=1;
+				};
+			};
+		};
+		nAttributes=1;
 	};
 };
 class Mission
@@ -360,7 +349,7 @@ class Mission
 	};
 	class Entities
 	{
-		items=192;
+		items=191;
 		class Item0
 		{
 			dataType="Object";
@@ -1796,7 +1785,7 @@ class Mission
 				};
 			};
 			id=1102;
-			atlOffset=-25.714104;
+			atlOffset=-0.06703949;
 		};
 		class Item41
 		{
@@ -4568,7 +4557,7 @@ class Mission
 			};
 			id=1312;
 			type="land_gm_euro_furniture_coffeemaker_01";
-			atlOffset=0.41593933;
+			atlOffset=0.41488647;
 			class CustomAttributes
 			{
 				class Attribute0
@@ -5135,7 +5124,7 @@ class Mission
 			};
 			id=1347;
 			type="vn_b_ammobox_02";
-			atlOffset=0.0023040771;
+			atlOffset=0.00012969971;
 			class CustomAttributes
 			{
 				class Attribute0
@@ -5181,7 +5170,7 @@ class Mission
 			};
 			id=1348;
 			type="vn_steeldrum_bbq_02";
-			atlOffset=3.6624222;
+			atlOffset=3.662262;
 			class CustomAttributes
 			{
 				class Attribute0
@@ -5473,13 +5462,14 @@ class Mission
 				position[]={14668.293,107.61919,6944.2739};
 			};
 			side="Empty";
+			flags=4;
 			class Attributes
 			{
 				disableSimulation=1;
 			};
 			id=1366;
 			type="Land_vn_sunshade_01_f";
-			atlOffset=7.8189545;
+			atlOffset=0.057731628;
 			class CustomAttributes
 			{
 				class Attribute0
@@ -5581,7 +5571,7 @@ class Mission
 			};
 			id=1369;
 			type="vn_bar_01_lawnchair_01";
-			atlOffset=3.6622009;
+			atlOffset=3.6613464;
 			class CustomAttributes
 			{
 				class Attribute0
@@ -5615,7 +5605,7 @@ class Mission
 			};
 			id=1370;
 			type="vn_bar_01_lawnchair_01";
-			atlOffset=7.8161163;
+			atlOffset=7.73246;
 			class CustomAttributes
 			{
 				class Attribute0
@@ -5716,7 +5706,7 @@ class Mission
 			};
 			id=1375;
 			type="Land_Microwave_01_F";
-			atlOffset=0.42173004;
+			atlOffset=0.42194366;
 			class CustomAttributes
 			{
 				class Attribute0
@@ -5785,7 +5775,7 @@ class Mission
 			};
 			id=1377;
 			type="land_gm_euro_furniture_bar_01";
-			atlOffset=5.4953613;
+			atlOffset=0.34893799;
 			class CustomAttributes
 			{
 				class Attribute0
@@ -7236,29 +7226,13 @@ class Mission
 		{
 			dataType="Marker";
 			position[]={14685.943,99.698997,6948.8711};
-			name="firstcav_respawn_att";
-			text="@STR_FirstCAV_respawn_att";
+			name="firstcav_respawn_armatypethings";
+			text="@STR_FirstCAV_respawn_armatypethings";
 			type="Empty";
 			id=1439;
 			atlOffset=-0.00012207031;
 		};
 		class Item190
-		{
-			dataType="Object";
-			class PositionInfo
-			{
-				position[]={14694.049,99.661781,6935.1553};
-			};
-			side="Empty";
-			flags=4;
-			class Attributes
-			{
-				name="FirstCAV_headquarters_map";
-			};
-			id=1440;
-			type="Land_vn_b_prop_mapstand_01";
-		};
-		class Item191
 		{
 			dataType="Object";
 			class PositionInfo

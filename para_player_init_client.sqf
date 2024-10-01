@@ -41,21 +41,7 @@ call para_g_fnc_event_subsystem_init;
 //Setup paradrop
 call FirstCAV_fnc_action_paradrop;
 
-// call vn_mf_fnc_apply_unit_traits;
-
-// call vn_mf_fnc_action_trait;
-
-// apply health effects
-// call vn_mf_fnc_health_effects;
-
-// private _respawnDelay = ["respawn_delay", 20] call BIS_fnc_getParamValue;
-// setplayerrespawntime 10;
-
-// Start player marker subsystem
-// private _useMarkers = (["allow_map_markers", 1] call BIS_fnc_getParamValue) > 0;
-// if (_useMarkers) then {
-// 	call vn_mf_fnc_player_markers_subsystem_init;
-// };
+setplayerrespawntime 10;
 
 // Initalize marker info UI
 [] call para_c_fnc_zone_marker_init;
@@ -65,38 +51,11 @@ if (!isServer) then {
 	call para_g_fnc_ai_create_behaviour_execution_loop;
 };
 
-// Set up automatic view distance scaling for performance
-[] call para_c_fnc_perf_enable_dynamic_view_distance;
-
-// starting rank
-// vn_mf_starting_rank = player getVariable ["vn_mf_db_rank",0];
-
-// init awards array
-// vn_mf_default_awards = [];
-// {
-//     vn_mf_default_awards pushBack [configName _x, -1];
-// } forEach ("isClass(_x)" configClasses (missionConfigFile >> "gamemode" >> "awards_config"));
-
 // initialize tools controller
 call para_c_fnc_tool_controller_init;
 
-// call vn_mf_fnc_admin_arsenal;
-
-// This is used for showing values of food and water in the arsenal
-// call vn_mf_fnc_enable_arsenal_food_drink_overlay;
-
 //LOADING COMPLETE
 //Start tidying up ready for play.
-
-// end loading screen
-// uiSleep 0.4;
-// endLoadingScreen;
-// Fade in
-// cutText ["", "BLACK IN", 4];
-// Bring sound back to normal
-// 4 fadeSound 1;
-// Fade out the music
-// 8 fadeMusic 0;
 // Restore the music volume in the near future.
 [] spawn {sleep 8; playMusic ""; 2 fadeMusic 1};
 // Re-enable simulation
@@ -106,23 +65,6 @@ if (typeOf player != "VirtualCurator_F") then {
 
 //enabling and setting stamina
 player enableStamina false;
-// if(vn_mf_param_enable_stamina == false) then{
-//     player enableStamina false;
-// }
-// else{
-//     player enableStamina true;
-// 	switch (vn_mf_param_set_stamina) do
-// 	{
-// 		case 0: {setStaminaScheme "Normal"};
-// 		case 1: {setStaminaScheme "Default"};
-// 		case 2: {setStaminaScheme "FastDrain"};
-// 		case 3: {setStaminaScheme "Exhausted"};
-// 	};
-// };
-
-// display location after a little delay
-// sleep 4;
-// call vn_mf_fnc_display_location_time;
 
 [] spawn
 {
@@ -132,91 +74,6 @@ player enableStamina false;
 		[] call para_c_fnc_set_aperture_based_on_light_level;
 	};
 };
-
-// [] spawn
-// {
-// 	uiSleep 2;
-// 	private _version = getText(missionConfigFile >> "version");
-// 	private _lastVersion = (["GET", "last_version", ""] call para_s_fnc_profile_db) select 1;
-// 	//Open welcome screen for new players
-// 	private _welcomeScreenEnabled = ["para_enableWelcomeScreen"] call para_c_fnc_optionsMenu_getValue;
-// 	private _versionHasChanged = _lastVersion == "" || _lastVersion != _version;
-
-// 	if (_versionHasChanged) exitWith {
-// 		createDialog "para_ChangelogScreen";
-// 		["SET", "last_version", _version] call para_s_fnc_profile_db;
-// 	};
-
-// 	if (_welcomeScreenEnabled) exitWith {
-// 		createDialog "para_WelcomeScreen";
-// 	};
-// };
-
-// Marker Discovery
-// [] call vn_mf_fnc_sites_subsystem_client_init;
-// Tutorial System
-// [] call vn_mf_fnc_tutorial_subsystem_client_init;
-
-
-//Add Master Arm addAction for Boats and Land Vehicles
-// if hasInterface then
-// {
-//     // Remove action to re-add it later
-//     private _old_action_id = player getVariable ["vn_mf_masterarm_action_id", -1];
-//     if (_old_action_id > -1) then { player removeAction _old_action_id; player setVariable ["vn_mf_masterarm_action_id", -1]; };
-
-//     private _action =
-//     [
-//         localize "STR_VN_MASTER_ARM_OPEN_ACTION",
-//         {
-//             params ["_target", "_caller", "_actionId", "_arguments"];
-//             ["init"] call VN_fnc_masterarm;
-//         },
-//         [],
-//         -100,
-//         true,
-//         true,
-//         "",
-//         toString {
-//             private _vehicle = vehicle _this;
-//             local _vehicle && {
-//                 !(_vehicle isKindOf 'Air' || _vehicle isKindOf 'Man') && {
-//                     speed _vehicle <= 5 && {
-//                         driver _vehicle == _this && {vn_fnc_masterarm_action_objects findif {(_vehicle distance _x) < 25} > -1}
-//                     }
-//                 }
-//             }
-//         },
-//         25
-//     ];
-
-//     if (player getVariable ["vn_mf_masterarm_action_id", -1] <= -1) then
-//     {
-//         private _action_id = player addAction _action;
-//         player setVariable ["vn_mf_masterarm_action_id",_action_id];
-//     };
-
-//     private _vn_action = player getVariable ["vn_mf_masterarm_event_respawn",-1];
-//     if (_vn_action <= -1) then
-//     {
-//         private _retun = player addEventHandler ["Respawn",
-//             {
-//             _this spawn
-//             {
-//                 params ["_unit", "_corpse"];
-
-//                 waitUntil {player == _unit};
-
-//                 _corpse removeAction (_corpse getVariable ["vn_mf_masterarm_action_id", -1]);
-//                 _corpse setVariable ["vn_mf_masterarm_action_id", -1];
-
-//                 // Add new actions to player
-//                 [] spawn vn_fnc_masterarm_actions;
-//             };
-//             }];
-//         player setVariable ["vn_mf_masterarm_event_respawn",_retun];
-//     };
-// };
 
 //DEV (ToDo): Until client Scheduler is added:
 []spawn
@@ -231,5 +88,3 @@ player enableStamina false;
 };
 
 ["InitializePlayer", [player]] call para_c_fnc_dynamicGroups;
-
-
