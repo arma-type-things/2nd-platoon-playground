@@ -15,14 +15,14 @@ do
         local mapFolder="${missionName}.${map}"
         # if the source mission folder does not exist, continue the loop, skipping this mission.map combo
         if [ ! -d "${mapFolder}" ]; then
-            echo "Skipping ${mapFolder} as it does not exist."
             continue
         fi
         missionFolders+=("${mapFolder}")
     done
 done
 # create temp folder with fallback for macos
-tempFolder=$(mktemp -d 2>/dev/null || mktemp -d -t 'FirstCAVBuildTmp')
+buildFolder="${cwd}/build"
+mkdir -p $buildFolder
 # detect PBO tool and set it to the variable pboTool
 pboTool=""
 if command -v armake2 &> /dev/null
@@ -32,23 +32,31 @@ else
     echo "No PBO tool found. Please install armake2."
     exit 1
 fi
+# TODO: detect zip installed
+zipTool=""
+if command -v zip &> /dev/null
+then
+    zipTool="zip"
+else
+    echo "No ZIP tool found. Please install zip / unzip."
+    exit 1
+fi
 
 # MARK: - Functions
-function setupTempFolder {
+function setupBuildFolder {
     # Create mission folder(s) in temp folder
     for mapFolder in "${missionFolders[@]}"
     do
         # if the source mission folder does not exist, continue the loop, skipping this mission.map combo
         if [ ! -d "${mapFolder}" ]; then
-            echo "Skipping ${mapFolder} as it does not exist."
             continue
         fi
-        local targetFolder="${tempFolder}/${mapFolder}"
+        local targetFolder="${buildFolder}/${mapFolder}"
         # if the target folder exists, remove it
         if [ -d "${targetFolder}" ]; then
             rm -rf "${targetFolder}"
         fi
-        cp -r "${mapFolder}" "${tempFolder}/"
+        cp -r "${mapFolder}" "${buildFolder}/"
         cp -r "FirstCAV" "${targetFolder}/"
         cp -r "config" "${targetFolder}/"
         copyParadigm "${targetFolder}/"
@@ -63,16 +71,17 @@ function copyParadigm {
 
 function packMissions {
     # Pack the mission(s)
-    cd "${tempFolder}"
+    cd "${buildFolder}"
     for mapFolder in "${missionFolders[@]}"
     do
         # if the source mission folder does not exist, continue the loop, skipping this mission.map combo
         if [ ! -d "${mapFolder}" ]; then
-            echo "Skipping ${mapFolder} as it does not exist."
             continue
         fi
-        echo "Packing ${mapFolder}"
+        echo "Packing build/${mapFolder}.pbo"
         $pboTool pack "${mapFolder}" "${mapFolder}.pbo"
+        echo "Creating build/${mapFolder}.zip"
+        $zipTool -r "${mapFolder}.zip" "${mapFolder}"
     done
     cd "${cwd}"
 }
@@ -87,29 +96,11 @@ function updateGitSubmodules {
     touch "${cwd}/.submodules-updated"
 }
 
-function moveArtifacts {
-    # Move the artifacts to the build folder
-    cp ${tempFolder}/*.pbo "${cwd}/build/"
-    # mv "${tempFolder}/*.zip" "${cwd}/build/"
-}
-
-function cleanup {
-    # Cleanup
-    rm -rf "${tempFolder}"
-}
-
 # MARK: - Main function
 function main {
     updateGitSubmodules
-    setupTempFolder
-    echo "Temp folder: ${tempFolder}"
+    setupBuildFolder
     packMissions
-    mkdir -p "${cwd}/build"
-    moveArtifacts
-    # if DEBUG is set, do not cleanup the temp folder
-    if [ -z "$DEBUG" ]; then
-        cleanup
-    fi
 }
 
 # Run the main function
