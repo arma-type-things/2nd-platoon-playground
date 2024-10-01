@@ -67,6 +67,9 @@ function setupBuildFolder {
         cp -r "${mapFolder}" "${buildFolder}/"
         cp -r "FirstCAV" "${targetFolder}/"
         cp -r "config" "${targetFolder}/"
+        cp description.ext "${targetFolder}/"
+        cp cba_settings.sqf "${targetFolder}/"
+        cp stringtable.xml "${targetFolder}/"
         copyParadigm "${targetFolder}/"
     done
 }

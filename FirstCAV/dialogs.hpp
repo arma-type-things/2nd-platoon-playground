@@ -34,18 +34,17 @@
 
 #define MAP_IDC 10023
 
-
 class paradrop {
     name = "paradrop";
     duration = 4;
     idd = -1;
     movingEnable = true;
     controls[] = {
-        OuterBackground,GenericLabel111
+        OuterBackground, ParadropLabel
     };
     class OuterBackground {
         idc = -1;
-        type =  CT_STATIC ;
+        type =  CT_STATIC;
         style = ST_LEFT;
         colorText[] = COLOR_BLACK;
         colorBackground[] = COLOR_BLACK;
@@ -55,9 +54,9 @@ class paradrop {
         w = 9;  h = 9;
         text = "";
     };
-    class GenericLabel111 {
+    class ParadropLabel {
         idc = -1;
-        type =  CT_STATIC ;
+        type =  CT_STATIC;
         style = ST_CENTER;
         colorText[] = COLOR_WHITE;
         colorBackground[] = COLOR_NOALPHA;
@@ -65,6 +64,6 @@ class paradrop {
         sizeEx = 0.03;
         x = 0; y = 0.75;
         w = 1.0;  h = 0.1;
-        text = $STR_PARADROP_IN_PROGRESS;
+        text = "Paradrop in progress...";
     };
 };

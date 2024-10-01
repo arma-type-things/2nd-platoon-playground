@@ -1,6 +1,42 @@
+/*
+    File: para_server_init.sqf
+    Public: Yes
+
+    Description:
+        Called to initialise the server on game start.
+
+    Parameter(s):
+        None
+
+    Returns:
+        None
+
+    Example(s):
+        //In description.ext
+        use_paradigm_init = 1;
+*/
+
+private _gamemode_config = (missionConfigFile >> "FirstCAV_zeusmode");
+
+diag_log "1st Cav: Finding spawn markers";
+respawn_markers = [];
+{
+    if (_x find "firstcav_respawn_" isEqualTo 0) then {
+		respawn_markers pushBack _x;
+	};
+} forEach allMapMarkers;
+
+
+diag_log "1st Cav: Setting up spawn points";
+firstcav_respawn_points = respawn_markers apply {
+	[west, _x, markerText _x] call BIS_fnc_addRespawnPosition
+};
+
 // start scheduler
 diag_log "1st Cav: Starting scheduler";
 [] call para_g_fnc_scheduler_subsystem_init;
+call para_g_fnc_event_subsystem_init;
+
 
 //Set up slingloaded item locality on helicopters.
 ["vehicleCreated", [

@@ -1,4 +1,4 @@
-// private _baseConfig = missionConfigFile >> "FirstCAV" >> "paradrop" >> "pickups";
+// private _baseConfig = missionConfigFile >> "FirstCAV_zeusmode" >> "paradrop" >> "pickups";
 
 [] spawn {
     private [ "_dialog", "_backpack", "_backpackcontents" ];

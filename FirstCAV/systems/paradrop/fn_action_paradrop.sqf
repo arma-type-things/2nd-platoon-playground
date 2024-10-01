@@ -18,7 +18,7 @@
 		call FirstCAV_fnc_action_paradrop
 */
 
-private _baseConfig = missionConfigFile >> "FirstCAV" >> "paradrop";
+private _baseConfig = missionConfigFile >> "FirstCAV_zeusmode" >> "paradrop";
 
 {
 	private _pickupConfig = _x;

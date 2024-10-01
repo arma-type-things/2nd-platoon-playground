@@ -1,0 +1,51 @@
+#include "description_map.inc"
+
+class Header
+{
+	gameType = "FirstCAVZeus";
+	minPlayers = 2;
+	maxPlayers = 40;
+};
+
+showHUD[] =
+{
+	true,	// Scripted HUD (same as showHUD command)
+	true,	// Vehicle + soldier info
+	true,	// Vehicle radar
+	true,	// Vehicle compass
+	true,	// Tank direction indicator
+	true,	// Commanding menu
+	true,	// Group Bar
+	true,	// HUD Weapon Cursors
+	true	// Vehicle display panels
+};
+
+// Enable CBA settings loading
+cba_settings_hasSettingsFile = 1;
+
+class Params
+{
+	#include "config\params.hpp"
+};
+
+class CfgDebriefing
+{
+	class TimedOut
+	{
+		title = "ERROR";
+		subtitle = "Server Timeout";
+		description = "If you see this message please reconnect";
+		pictureBackground = "";
+		picture = "";
+		pictureColor[] = {0.0,0.3,0.6,1};
+	};
+};
+
+//Tell paradigm to handle mission initialisation.
+use_paradigm_init = 1;
+
+// Start initialization 
+#include "config\init.hpp"
+
+// combine with config/core or remove
+// #include "FirstCAV\definitions.hpp"
