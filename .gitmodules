@@ -1,0 +1,4 @@
+[submodule "paradigm"]
+	path = paradigm
+	url = https://github.com/Savage-Game-Design/Paradigm.git
+	branch = development

@@ -1,0 +1,150 @@
+#!/usr/bin/env zsh
+
+# This script assembles the folder structure for the mission file. It will then attempt to detect what PBO tool is available and use that to pack the mission file.
+
+# Global variables
+cwd=$(pwd)
+# Mission folder names, space separated, without the map name (usefule for winter and non-winter maps having the same sqm)
+# e.g. missionNames=("mountain-ops" "desert-ops")
+missionNames=("2nd-platoon-private-zeus-nam" "dummy")
+# Map names, space separated. This will be used to create the full name of the mission file, as well as process repeated mission files on multiple maps
+# e.g. supportedMaps=("chern" "chern_winter" "takistan")
+supportedMaps=("Cam_Lao_Nam" "example")
+missionFolders=()
+# This generates the list of mission files, using missionNames and supportedMaps, combined.
+# e.g. with the above, it will see if mountain-ops.chern, mountain-ops.chern_winter, mountain-ops.takistan, desert-ops.chern, desert-ops.chern_winter, and desert-ops.takistan exist.
+# If so, that mission folder name is added to the "missionFolders" list, which is later used to build the script structures and package up the PBO / ZIP files.
+# This system lets you do something like, have a mountain-ops.takisan mission, along with a mountain-ops.chern and mountain-ops.chern_winter missions, and they will all get packaged up, along side the desert-ops.takistan mission, if it exists.
+# You can use this combined with folder names of missions to flexibly build a number of different combinations. May not be useful to you, but it was useful for this project.
+for map in "${supportedMaps[@]}"
+do
+    for missionName in "${missionNames[@]}"
+    do
+        local mapFolder="${missionName}.${map}"
+        # if the source mission folder does not exist, continue the loop, skipping this mission.map combo
+        if [ ! -d "${mapFolder}" ]; then
+            continue
+        fi
+        missionFolders+=("${mapFolder}")
+    done
+done
+# create temp folder with fallback for macos
+buildFolder="${cwd}/build"
+mkdir -p $buildFolder
+# detect PBO tool and set it to the variable pboTool
+pboTool=""
+if command -v armake2 &> /dev/null
+then
+    pboTool="armake2"
+else
+    echo "No PBO tool found. Please install armake2."
+    exit 1
+fi
+# TODO: detect zip installed
+zipTool=""
+if command -v zip &> /dev/null
+then
+    zipTool="zip"
+else
+    echo "No ZIP tool found. Please install zip / unzip."
+    exit 1
+fi
+
+# MARK: - Functions
+function setupBuildFolder {
+    # Create mission folder(s) in temp folder
+    for mapFolder in "${missionFolders[@]}"
+    do
+        # if the source mission folder does not exist, continue the loop, skipping this mission.map combo
+        if [ ! -d "${mapFolder}" ]; then
+            continue
+        fi
+        local targetFolder="${buildFolder}/${mapFolder}"
+        # if the target folder exists, remove it
+        if [ -d "${targetFolder}" ]; then
+            rm -rf "${targetFolder}"
+        fi
+        cp -r "${mapFolder}" "${buildFolder}/"
+        copyMissionSettings "${targetFolder}/"
+        if _skipScripts "${mapFolder}"; then
+            continue
+        fi
+        copyParadigm "${targetFolder}/"
+        copyParadigmConfig "${targetFolder}/"
+        copyCustomFunctions "${targetFolder}/"
+    done
+}
+
+function copyMissionSettings {
+    local missionFolder=$1
+    if _skipScripts "${missionFolder}"; then
+        cp description.ext.skip-scripts "${missionFolder}/description.ext"
+    else 
+        cp description.ext "${missionFolder}/"
+    fi
+    cp cba_settings.sqf "${missionFolder}/"
+}
+
+function copyParadigm {
+    local missionFolder=$1
+    cp -r "paradigm" "${missionFolder}"
+    cp para_*.sqf "${missionFolder}"
+}
+
+function copyParadigmConfig {
+    local missionFolder=$1
+    cp -r "config" "${missionFolder}/"
+}
+
+function copyCustomFunctions {
+    local missionFolder=$1
+    cp -r "FirstCAV" "${missionFolder}/"
+}
+
+function packMissions {
+    # Pack the mission(s)
+    cd "${buildFolder}"
+    for mapFolder in "${missionFolders[@]}"
+    do
+        # if the source mission folder does not exist, continue the loop, skipping this mission.map combo
+        if [ ! -d "${mapFolder}" ]; then
+            continue
+        fi
+        echo "Packing build/${mapFolder}.pbo"
+        $pboTool pack "${mapFolder}" "${mapFolder}.pbo"
+        echo "Creating build/${mapFolder}.zip"
+        $zipTool -r "${mapFolder}.zip" "${mapFolder}"
+    done
+    cd "${cwd}"
+}
+
+function updateGitSubmodules {
+    # if the .submodules-updated file exists, quietly exit this function and continue the script
+    if [ -f "${cwd}/.submodules-updated" ]; then
+        return
+    fi
+    # Update git submodules
+    git submodule update --init --recursive
+    touch "${cwd}/.submodules-updated"
+}
+
+function _skipScripts {
+    local missionFolder=$1
+    local scriptFlag="${missionFolder}/.skip-scripts"
+
+    if [ -f "${scriptFlag}" ]; then
+        return 0
+    else
+        return 1
+    fi
+}
+
+# MARK: - Main function
+function main {
+    updateGitSubmodules
+    setupBuildFolder
+    packMissions
+}
+
+# Run the main function
+main
