@@ -6,10 +6,11 @@
 cwd=$(pwd)
 # Mission folder names, space separated, without the map name (usefule for winter and non-winter maps having the same sqm)
 # e.g. missionNames=("mountain-ops" "desert-ops")
-missionNames=("2nd-platoon-private-zeus-nam" "dummy")
+# TODO: remove -nam
+missionNames=("2nd-platoon-private-zeus-nam" "2nd-platoon-private-zeus")
 # Map names, space separated. This will be used to create the full name of the mission file, as well as process repeated mission files on multiple maps
 # e.g. supportedMaps=("chern" "chern_winter" "takistan")
-supportedMaps=("Cam_Lao_Nam" "example")
+supportedMaps=("Cam_Lao_Nam" "Altis")
 missionFolders=()
 # This generates the list of mission files, using missionNames and supportedMaps, combined.
 # e.g. with the above, it will see if mountain-ops.chern, mountain-ops.chern_winter, mountain-ops.takistan, desert-ops.chern, desert-ops.chern_winter, and desert-ops.takistan exist.
