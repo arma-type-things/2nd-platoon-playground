@@ -9,7 +9,7 @@ class FirstCAV_zeusmode
 		hidden[] = {};
 	};
 
-	// firstcav_respawn_att
+	// firstcav_respawn_armatypethings
 	class teams {
 		class ArmaTypeThings
 		{
@@ -22,123 +22,114 @@ class FirstCAV_zeusmode
 			onLeave = "";
 		};
 	};
-	// class difficulty
-	// {
-	// 	#include "subconfigs\difficulty.hpp"
-	// };
-	// class performance
-	// {
-	// 	#include "subconfigs\performance.hpp"
-	// };
-	// class keys
-	// {
-	// 	#include "subconfigs\keys.hpp"
-	// };
-	// class buildables
-	// {
-	// 	#include "subconfigs\buildables.hpp"
-	// };
-	// class supplydrops
-	// {
-	// 	#include "subconfigs\supplydrops.hpp"
-	// };
-	// class traits
-	// {
-	// 	#include "subconfigs\traits.hpp"
-	// };
-    // class teams
-    // {
-    //     #include "subconfigs\teams.hpp"
-    // };
-	// class crates
-	// {
-	// 	#include "subconfigs\crates.hpp"
-	// };
-	// class rank
-	// {
-	// 	#include "subconfigs\rank.hpp"
-	// };
-	// class stats
-	// {
-	// 	#include "subconfigs\stats.hpp"
-	// };
-	// class awards_config
-	// {
-	// 	#include "subconfigs\awards_config.hpp"
-	// };
-	// class awards
-	// {
-	// 	#include "subconfigs\awards.hpp"
-	// };
-	// class health
-	// {
-	// 	#include "subconfigs\health.hpp"
-	// };
-	// class settings
-	// {
-	// 	#include "subconfigs\settings.hpp"
-	// };
-	// class missionEventHandler
-	// {
-	// 	#include "subconfigs\missionEventHandler.hpp"
-	// };
-	// class displayEventHandler
-	// {
-	// 	#include "subconfigs\displayEventHandler.hpp"
-	// };
-	// class playerEventHandler
-	// {
-	// 	#include "subconfigs\playerEventHandler.hpp"
-	// };
-	// class tasks
-	// {
-	// 	#include "subconfigs\tasks\tasks.hpp"
-	// };
-	// class loadingScreens
-	// {
-	// 	#include "subconfigs\loadingScreens.hpp"
-	// };
-	// class masterloop
-	// {
-	// 	#include "subconfigs\masterloop.hpp"
-	// };
-	// class vars
-	// {
-	// 	#include "subconfigs\vars.hpp"
-	// };
-	// class rehandler
-	// {
-	// 	#include "subconfigs\rehandler.hpp"
-	// };
-	// class vehicle_lock_info
-	// {
-	// 	#include "subconfigs\vehicle_lock_info.hpp"
-	// };
-	// class vehicle_respawn_info
-	// {
-	// 	#include "subconfigs\vehicle_respawn_info.hpp"
-	// };
-	// class teleporters
-	// {
-	// 	#include "subconfigs\teleporters.hpp"
-	// };
-	// class interaction_overlay
-	// {
-	// 	#include "subconfigs\interaction_overlay.hpp"
-	// };
-	// class vehicles
-	// {
-	// 	#include "subconfigs\vehicles.hpp"
-	// };
-	// class zoneMarkerTypes
-	// {
-	// 	#include "subconfigs\zoneMarkerTypes.hpp"
-	// };
-
-	// #include "subconfigs\units.hpp"
 };
 
-// so we don't get errors when updating the local vars
+#include "\a3\ui_f\hpp\definedikcodes.inc"
+
+// so we don't get errors when updating the local vars / when loading paradigm parameters
 class gamemode {
 	class tracking {};
+	class keys {
+		class para_keydown_open_wheel_menu {
+			defaultKey = DIK_6;
+			shift = "false";
+			ctrl = "false";
+			alt = "false";
+			function = "para_c_fnc_wheel_menu_open_keybind";
+			down = 1;
+			displayName = $STR_vn_mf_keybindings_selector;
+			access = 1;
+		};
+		class para_vote_1 {
+			defaultKey = DIK_F1;
+			shift = "false";
+			ctrl = "false";
+			alt = "false";
+			function = "para_c_fnc_vote_1";
+			down = 1;
+			displayName = "Vote for Option #1";
+			access = 1;
+		};
+		class para_vote_2 {
+			defaultKey = DIK_F2;
+			shift = "false";
+			ctrl = "false";
+			alt = "false";
+			function = "para_c_fnc_vote_2";
+			down = 1;
+			displayName = "Vote for Option #2";
+			access = 1;
+		};
+		class para_vote_3 {
+			defaultKey = DIK_F3;
+			shift = "false";
+			ctrl = "false";
+			alt = "false";
+			function = "para_c_fnc_openVoteMenu";
+			down = 1;
+			displayName = "Open Voting Menu";
+			access = 1;
+		};
+		class firstcav_interactionOverlay_toggle {
+			defaultKey = DIK_7; // 7
+			shift = "false";
+			ctrl = "false";
+			alt = "false";
+			function = "para_c_fnc_interactionOverlay_toggle";
+			down = 1;
+			displayName = $STR_vn_mf_keybindings_interactionOverlay_toggle;
+			access = 1;
+		};
+	};
+
+	class interaction_overlay {
+		/*
+			class CLASSNAME
+			{
+				name = "";
+				icon = "";
+				description = "";
+				variables[] = {}; // String array of code
+			};
+		*/
+
+		class Settings
+		{
+			distance = 6;
+			liveText = 1;
+			defaultKey = 7;
+		};
+
+		class DutyOfficer
+		{
+			name = "Duty Officer";
+			icon = "";
+			description = "Change teams or train in a role, such as engineer.";
+			variables[] = {};
+		};
+
+		class FastTravel
+		{
+			name = "Fast Travel";
+			icon = "";
+			description = "Teleport to the bases of each team";
+			variables[] = {};
+		};
+
+		class SupplyOfficer
+		{
+			name = "Supply Officer";
+			icon = "";
+			description = "Request supplies, such as building supplies, food or ammunition.";
+			variables[] = {};
+		};
+
+		class Land_vn_b_prop_mapstand_01
+		{
+			name = "Map on a piece of wood";
+			icon = "";
+			description = "Health: <t color='#FF0000'>%2%1</t><br/>Distance: %3m";
+			variables[] = { "'%'", "round (100 - (damage _object) * 100)", "round (_object distance player)" };
+		};
+	};
 };

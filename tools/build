@@ -65,19 +65,40 @@ function setupBuildFolder {
             rm -rf "${targetFolder}"
         fi
         cp -r "${mapFolder}" "${buildFolder}/"
-        cp -r "FirstCAV" "${targetFolder}/"
-        cp -r "config" "${targetFolder}/"
-        cp description.ext "${targetFolder}/"
-        cp cba_settings.sqf "${targetFolder}/"
-        cp stringtable.xml "${targetFolder}/"
+        copyMissionSettings "${targetFolder}/"
+        if _skipScripts "${mapFolder}"; then
+            continue
+        fi
         copyParadigm "${targetFolder}/"
+        copyParadigmConfig "${targetFolder}/"
+        copyCustomFunctions "${targetFolder}/"
     done
+}
+
+function copyMissionSettings {
+    local missionFolder=$1
+    if _skipScripts "${missionFolder}"; then
+        cp description.ext.skip-scripts "${missionFolder}/description.ext"
+    else 
+        cp description.ext "${missionFolder}/"
+    fi
+    cp cba_settings.sqf "${missionFolder}/"
 }
 
 function copyParadigm {
     local missionFolder=$1
     cp -r "paradigm" "${missionFolder}"
     cp para_*.sqf "${missionFolder}"
+}
+
+function copyParadigmConfig {
+    local missionFolder=$1
+    cp -r "config" "${missionFolder}/"
+}
+
+function copyCustomFunctions {
+    local missionFolder=$1
+    cp -r "FirstCAV" "${missionFolder}/"
 }
 
 function packMissions {
@@ -105,6 +126,17 @@ function updateGitSubmodules {
     # Update git submodules
     git submodule update --init --recursive
     touch "${cwd}/.submodules-updated"
+}
+
+function _skipScripts {
+    local missionFolder=$1
+    local scriptFlag="${missionFolder}/.skip-scripts"
+
+    if [ -f "${scriptFlag}" ]; then
+        return 0
+    else
+        return 1
+    fi
 }
 
 # MARK: - Main function

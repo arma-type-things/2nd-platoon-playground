@@ -26,4 +26,9 @@ class FirstCAV {
         file = "FirstCAV\systems\core\teams";
         class change_team {}; // "FirstCAV_fnc_change_team"
     }
+
+    class ui {
+        file = "FirstCAV\systems\core\ui";
+        class ui_create {}; // "FirstCAV_fnc_ui_create"
+    }
 };

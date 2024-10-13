@@ -89,7 +89,7 @@ if !(_loadout isEqualTo []) then
 };
 
 // Spawn
-private _respawnMarker = format ["mf_respawn_%1", _lastTeamName];
+private _respawnMarker = format ["firstcav_respawn_%1", _lastTeamName];
 _player setPos getMarkerPos _respawnMarker;
 
 // firstcav_respawn_armatypethings

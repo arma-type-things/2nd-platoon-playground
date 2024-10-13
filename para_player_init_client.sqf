@@ -33,7 +33,13 @@ params ["_player", "_didJIP"];
 // Instantiate the main scheduler
 [] call para_g_fnc_scheduler_subsystem_init;
 
+// Initialize the event subsystem
+call para_c_fnc_init_display_event_handler;
 call para_g_fnc_event_subsystem_init;
+
+call para_c_fnc_init_player_event_handlers;
+
+0 spawn FirstCAV_fnc_ui_create;
 
 //Setup teleporters
 // call vn_mf_fnc_action_teleport;
