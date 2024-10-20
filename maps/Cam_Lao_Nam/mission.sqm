@@ -27,7 +27,7 @@ class EditorData
 	};
 };
 binarizationWanted=0;
-sourceName="2nd-platoon-private-zeus-nam";
+sourceName="2nd-platoon-private-zeus";
 addons[]=
 {
 	"structures_f_vietnam_c",

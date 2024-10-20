@@ -1,34 +1,14 @@
 #!/usr/bin/env zsh
 
-# This script assembles the folder structure for the mission file. It will then attempt to detect what PBO tool is available and use that to pack the mission file.
+# This script assembles the folder structure for the mission files. It will then attempt to detect what PBO tool is available (some day) and use that to pack the mission file.
 
 # Global variables
 cwd=$(pwd)
-# Mission folder names, space separated, without the map name (usefule for winter and non-winter maps having the same sqm)
-# e.g. missionNames=("mountain-ops" "desert-ops")
-# TODO: remove -nam
-missionNames=("2nd-platoon-private-zeus-nam" "2nd-platoon-private-zeus" "2nd-platoon-private-zeus-twin-lakes")
-# Map names, space separated. This will be used to create the full name of the mission file, as well as process repeated mission files on multiple maps
-# e.g. supportedMaps=("chern" "chern_winter" "takistan")
-supportedMaps=("Cam_Lao_Nam" "Altis" "sws_twinlakes")
-missionFolders=()
-# This generates the list of mission files, using missionNames and supportedMaps, combined.
-# e.g. with the above, it will see if mountain-ops.chern, mountain-ops.chern_winter, mountain-ops.takistan, desert-ops.chern, desert-ops.chern_winter, and desert-ops.takistan exist.
-# If so, that mission folder name is added to the "missionFolders" list, which is later used to build the script structures and package up the PBO / ZIP files.
-# This system lets you do something like, have a mountain-ops.takisan mission, along with a mountain-ops.chern and mountain-ops.chern_winter missions, and they will all get packaged up, along side the desert-ops.takistan mission, if it exists.
-# You can use this combined with folder names of missions to flexibly build a number of different combinations. May not be useful to you, but it was useful for this project.
-for map in "${supportedMaps[@]}"
-do
-    for missionName in "${missionNames[@]}"
-    do
-        local mapFolder="${missionName}.${map}"
-        # if the source mission folder does not exist, continue the loop, skipping this mission.map combo
-        if [ ! -d "${mapFolder}" ]; then
-            continue
-        fi
-        missionFolders+=("${mapFolder}")
-    done
-done
+# Base mission name; will be used to create mission folders with the map name appended
+missionName="2nd-platoon-private-zeus"
+# Map names, generated from the folders placed in the maps folder; should have mission.sqm file, and either a description_map.inc or a .skip-scripts file
+mapFolders=$(ls -1d maps/*/ | cut -f2 -d\/)
+supportedMaps=(${=mapFolders})
 # create temp folder with fallback for macos
 buildFolder="${cwd}/build"
 mkdir -p $buildFolder
@@ -38,7 +18,7 @@ if command -v armake2 &> /dev/null
 then
     pboTool="armake2"
 else
-    echo "No PBO tool found. Please install armake2."
+    echo "No PBO tool found. Please install armake2 (cargo install armake2)."
     exit 1
 fi
 # TODO: detect zip installed
@@ -47,27 +27,25 @@ if command -v zip &> /dev/null
 then
     zipTool="zip"
 else
-    echo "No ZIP tool found. Please install zip / unzip."
+    echo "No ZIP tool found. Please install zip / unzip for the command line."
     exit 1
 fi
 
 # MARK: - Functions
 function setupBuildFolder {
     # Create mission folder(s) in temp folder
-    for mapFolder in "${missionFolders[@]}"
+    for map in "${supportedMaps[@]}"
     do
-        # if the source mission folder does not exist, continue the loop, skipping this mission.map combo
-        if [ ! -d "${mapFolder}" ]; then
-            continue
-        fi
+        local sourceFolder="maps/${map}"
+        local mapFolder="${missionName}.${map}"
         local targetFolder="${buildFolder}/${mapFolder}"
         # if the target folder exists, remove it
         if [ -d "${targetFolder}" ]; then
             rm -rf "${targetFolder}"
         fi
-        cp -r "${mapFolder}" "${buildFolder}/"
+        cp -r "${sourceFolder}" "${targetFolder}/"
         copyMissionSettings "${targetFolder}/"
-        if _skipScripts "${mapFolder}"; then
+        if _skipScripts "${sourceFolder}"; then
             continue
         fi
         copyParadigm "${targetFolder}/"
@@ -105,12 +83,10 @@ function copyCustomFunctions {
 function packMissions {
     # Pack the mission(s)
     cd "${buildFolder}"
-    for mapFolder in "${missionFolders[@]}"
+
+    for map in "${supportedMaps[@]}"
     do
-        # if the source mission folder does not exist, continue the loop, skipping this mission.map combo
-        if [ ! -d "${mapFolder}" ]; then
-            continue
-        fi
+        local mapFolder="${missionName}.${map}"
         echo "Packing build/${mapFolder}.pbo"
         $pboTool pack "${mapFolder}" "${mapFolder}.pbo"
         echo "Creating build/${mapFolder}.zip"
